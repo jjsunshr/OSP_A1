@@ -1,1 +1,2 @@
-# OSP_A1
+# COSC 1114 Operating Systems Principles
+# Qi Sun s3653030
