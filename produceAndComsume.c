@@ -56,7 +56,42 @@ void displayAllProduct() {
   program would be clear for the users to analysis the multi-thread program running principle 
 */
 
+void* producer_worker(void *arg) {
+	  int threadID = *(int *)arg;
+    printf("producer thread: %d start working.\n", threadID);
+    while (TRUE) {
+      // if exceed 10 seconds, the producer thread function would just return.
+      if (buckets.done == 1) {
+        return NULL;
+      }
 
+      // sleep random second [0, 1] to make the thread runs slower so that actions could be reviewed clearly
+    	usleep(100000 * (rand() % 10 + 1));
+      
+      // get the lock
+      pthread_mutex_lock(&mutex);
+
+      while (buckets.size == BUCKET_SIZE) {
+        pthread_cond_wait(&cond, &mutex);
+		  }
+
+      // producing
+    	buckets.produce_index = buckets.produce_index % BUCKET_SIZE;
+      buckets.buffer[buckets.produce_index] = getRandomProductIndex();
+      char* productName = productsStrs[buckets.buffer[buckets.produce_index]];
+      printf("producer thread: %d produces product: %s and placed at: %d\n", threadID, productName, buckets.produce_index);
+      buckets.produce_index++;
+      //displayAllProduct();
+      buckets.size++;
+
+      pthread_cond_signal(&cond);
+      pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
+void* consumer_worker(void *arg) {
+
+}
 int main() {
 
   return 0;
