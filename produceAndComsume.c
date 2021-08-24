@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
 
 
 
@@ -91,7 +92,36 @@ void* producer_worker(void *arg) {
 }
 void* consumer_worker(void *arg) {
 
+	int threadID = *(int *)arg;
+  printf("consumer thread: %d start working.\n", threadID);
+  while (1) {
+    // if exceed 10 seconds, the comsumer thread function would just return.
+    if (buckets.done == 1) {
+        return NULL;
+    }
+    // sleep random second [0, 2] to make the thread runs slower so that actions could be reviewed clearly
+    usleep(100000 * (rand() % 20 + 1));
+  
+    pthread_mutex_lock(&mutex);
+    while (buckets.size == 0) {
+      pthread_cond_wait(&cond, &mutex);
+		}
+
+		// consuming
+    buckets.consume_index = buckets.consume_index % BUCKET_SIZE;
+    int product = buckets.buffer[buckets.consume_index];
+    printf("consumer thread: %d consumes product: %s at index: %d\n", threadID, productsStrs[product], buckets.consume_index);
+    buckets.buffer[buckets.consume_index] = -1;
+    buckets.consume_index++;
+    buckets.size--;
+    //displayAllProduct();
+    
+    pthread_cond_signal(&cond);
+    pthread_mutex_unlock(&mutex);
+  }
+  return NULL;
 }
+
 int main() {
 
   return 0;
