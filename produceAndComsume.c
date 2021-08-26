@@ -20,7 +20,7 @@ typedef struct Bucket {
   int buffer[BUCKET_SIZE];
   int size;               // resource number left in the buffer
   int produce_index;      // produce index for the next product
-	int consume_index;      // consume index for the next product
+  int consume_index;      // consume index for the next product
   int done;
 } Bucket;
 
@@ -74,7 +74,7 @@ void* producer_worker(void *arg) {
 
       while (buckets.size == BUCKET_SIZE) {
         pthread_cond_wait(&cond, &mutex);
-		  }
+      }
       // producing
     	buckets.produce_index = buckets.produce_index % BUCKET_SIZE;
       buckets.buffer[buckets.produce_index] = getRandomProductIndex();
@@ -107,7 +107,7 @@ void* consumer_worker(void *arg) {
     }
 
 
-		// consuming
+    // consuming
     buckets.consume_index = buckets.consume_index % BUCKET_SIZE;
     int product = buckets.buffer[buckets.consume_index];
     printf("consumer thread: %d consumes product: %s at index: %d\n", threadID, productsStrs[product], buckets.consume_index);
