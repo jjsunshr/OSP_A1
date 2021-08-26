@@ -75,7 +75,6 @@ void* producer_worker(void *arg) {
       while (buckets.size == BUCKET_SIZE) {
         pthread_cond_wait(&cond, &mutex);
 		  }
-
       // producing
     	buckets.produce_index = buckets.produce_index % BUCKET_SIZE;
       buckets.buffer[buckets.produce_index] = getRandomProductIndex();
@@ -105,7 +104,7 @@ void* consumer_worker(void *arg) {
     pthread_mutex_lock(&mutex);
     while (buckets.size == 0) {
       pthread_cond_wait(&cond, &mutex);
-		}
+	  }
 
 		// consuming
     buckets.consume_index = buckets.consume_index % BUCKET_SIZE;
@@ -121,8 +120,56 @@ void* consumer_worker(void *arg) {
   }
   return NULL;
 }
+// initialize the buffer which used for the producer and consumer threads
+void initParameter() {
+  for (int i = 0; i < BUCKET_SIZE; i++) {
+    buckets.buffer[i] = -1;
+  }
+  buckets.consume_index = 0;
+  buckets.produce_index = 0;
+  buckets.done = 0;
+  buckets.size = 0;
+
+  pthread_mutex_init(&mutex, NULL);
+  pthread_cond_init(&cond, NULL);
+}
+
+// launch all pthreads with specified worker function
+void launchPthread(pthread_t* threads, int threadSize, void*(*func)(void*), int* ids) {
+  for (int i = 0; i < threadSize; i++) {
+    ids[i] = i;
+    pthread_create(&threads[i], NULL, func, (void*)&ids[i]);
+  }
+}
+
+// release all threads by using pthread_join function
+void releaseThreads(pthread_t* threads, int size) {
+  for (int i = 0; i < size; i++) {
+    pthread_join(threads[i], NULL);
+  }
+}
 
 int main() {
+  // initialize the time seed
+  srand(time(NULL));
+  // initialize all parameters
+  initParameter();
 
+  pthread_t comsumers[CONSUMER_NUM];
+  pthread_t producers[PRODUCER_NUM];
+  int consumers_id[CONSUMER_NUM];
+  int producers_id[PRODUCER_NUM];
+
+  launchPthread(producers, PRODUCER_NUM, producer_worker, producers_id);
+  launchPthread(cosumers, CONSUMER_NUM, consumer_worker, consumers_id);
+
+  sleep(10);
+  buckets.done = 1;
+
+  // release all threads
+  releaseThreads(producers, PRODUCER_NUM);
+  releaseThreads(cosumers, CONSUMER_NUM);
+
+  
   return 0;
 }
