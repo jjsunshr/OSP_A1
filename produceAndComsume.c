@@ -104,7 +104,8 @@ void* consumer_worker(void *arg) {
     pthread_mutex_lock(&mutex);
     while (buckets.size == 0) {
       pthread_cond_wait(&cond, &mutex);
-	  }
+    }
+
 
 		// consuming
     buckets.consume_index = buckets.consume_index % BUCKET_SIZE;
@@ -170,6 +171,6 @@ int main() {
   releaseThreads(producers, PRODUCER_NUM);
   releaseThreads(cosumers, CONSUMER_NUM);
 
-  
+
   return 0;
 }
