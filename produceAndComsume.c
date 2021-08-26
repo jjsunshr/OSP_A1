@@ -19,7 +19,7 @@ pthread_cond_t cond;
 typedef struct Bucket {
   int buffer[BUCKET_SIZE];
   int size;               // resource number left in the buffer
-	int produce_index;      // produce index for the next product
+  int produce_index;      // produce index for the next product
 	int consume_index;      // consume index for the next product
   int done;
 } Bucket;
