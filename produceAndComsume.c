@@ -171,6 +171,7 @@ int main() {
   releaseThreads(producers, PRODUCER_NUM);
   releaseThreads(cosumers, CONSUMER_NUM);
 
-
+  pthread_mutex_destroy(&mutex);
+  pthread_cond_destroy(&cond);
   return 0;
 }
