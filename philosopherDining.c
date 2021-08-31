@@ -20,7 +20,9 @@ int philosopgerChops[FORK_NUM][2] = {{4, 0}, {0, 1}, {1, 2}, {2, 3}, {3, 4}};
 double eatTimes[FORK_NUM] = {0,0,0,0,0};
 int done = 0;
 
+// generate random time between 1 and 10
 double generateRandomTime() {
+    return (double)(rand() % 10 + 1);
     
 }
 

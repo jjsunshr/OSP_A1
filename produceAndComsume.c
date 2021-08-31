@@ -58,7 +58,7 @@ void displayAllProduct() {
 */
 
 void* producer_worker(void *arg) {
-	  int threadID = *(int *)arg;
+    int threadID = *(int *)arg;
     printf("producer thread: %d start working.\n", threadID);
     while (TRUE) {
       // if exceed 10 seconds, the producer thread function would just return.
@@ -76,7 +76,7 @@ void* producer_worker(void *arg) {
         pthread_cond_wait(&cond, &mutex);
       }
       // producing
-    	buckets.produce_index = buckets.produce_index % BUCKET_SIZE;
+      buckets.produce_index = buckets.produce_index % BUCKET_SIZE;
       buckets.buffer[buckets.produce_index] = getRandomProductIndex();
       char* productName = productsStrs[buckets.buffer[buckets.produce_index]];
       printf("producer thread: %d produces product: %s and placed at: %d\n", threadID, productName, buckets.produce_index);
