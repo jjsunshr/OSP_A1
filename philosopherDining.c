@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <unistd.h>
-#include <time.h>
 #include <errno.h>
+#include <time.h>
+#include <unistd.h>
 
 
 #define TRUE 1
@@ -24,7 +24,6 @@ int done = 0;
 // generate random time between 1 and 10
 double generateRandomTime() {
     return (double)(rand() % 10 + 1);
-    
 }
 
 // find weather the index time is less than the average time
@@ -79,15 +78,11 @@ void *eat_think(void *arg) {
         /*if (lessThanAvgTime(index) || eatTimes[index] == 0) {
             time = generateRandomTime();
             usleep(100000 * time);
-            eatTimes[index] = time
+            eatTimes[index] += time; 
             printf("Philosopher %d is eating %.3fs\n", index, time / SECOND_UNIT);
         }*/
 		
-		// release the left and right fork
-		pthread_mutex_unlock(&forks[leftFork]);
-		printf("Philosopher %d put fork %d down\n", index, leftFork);
-		pthread_mutex_unlock(&forks[rightFork]);
-		printf("Philosopher %d put fork %d down\n", index, rightFork);
+		
 	}
 }
 
@@ -102,10 +97,15 @@ int main(){
     pthread_t philosophers[FORK_NUM];
     int threadIDs[FORK_NUM];
     srand(time(NULL));
+	
+	// init the mutex
+	for (int i = 0; i < FORK_NUM; i++) {
+        pthread_mutex_init(&forks[i],NULL);
+    }
 
     sleep(10);
     done = 1;
-
+	
 	// release all threads
     for (int i = 0; i < FORK_NUM; i++) {
         pthread_join(philosophers[i], NULL);
@@ -113,7 +113,5 @@ int main(){
 
 	// display all eat time for all philosopgers
     displayAllEatTime();
-    
-    return 0;
-
+	return 0;
 }
