@@ -37,37 +37,37 @@ int lessThanAvgTime(int index) {
 
 // thread worker function
 void *eat_think(void *arg) {
-	// get the index of the philosophers
+    // get the index of the philosophers
     int index = *(int *)arg;
-	// get the left and right fork
-	int leftFork  = philosopgerChops[index][0];
+    // get the left and right fork
+    int leftFork  = philosopgerChops[index][0];
     int rightFork = philosopgerChops[index][1];
 
 	while (TRUE) {
         // thread return
         if (done == 1) return NULL;
 		
-		// get the sleep time for the left fork
+        // get the sleep time for the left fork
         double time = generateRandomTime();
-		printf("Philosopher %d is thinking %.3fs\n", index, time / SECOND_UNIT);
+        printf("Philosopher %d is thinking %.3fs\n", index, time / SECOND_UNIT);
         usleep(100000 * time);
          
-		pthread_mutex_lock(&forks[leftFork]); 
-		printf("Philosopher %d gets the fork %d\n", index, leftFork);
-		// get the sleep time for the right fork
+        pthread_mutex_lock(&forks[leftFork]); 
+        printf("Philosopher %d gets the fork %d\n", index, leftFork);
+        // get the sleep time for the right fork
         time = generateRandomTime();
 		printf("Philosopher %d is thinking %.3fs\n", index, time / SECOND_UNIT);
         usleep(100000 * time);
 		
-		// try to mutex the lock 
+        // try to mutex the lock 
         if (pthread_mutex_trylock(&forks[rightFork]) == EBUSY){ 
-			// if can not get the right fork, then release the left fork
-			pthread_mutex_unlock(&forks[leftFork]); 
+            // if can not get the right fork, then release the left fork
+            pthread_mutex_unlock(&forks[leftFork]); 
             printf("Philosopher %d put fork %d down\n", index, leftFork);
-			continue;
+            continue;
 		}
         else {
-			// get the right fork
+            // get the right fork
             printf("Philosopher %d gets the fork %d\n", index, rightFork);
         }
 			
@@ -98,8 +98,8 @@ int main(){
     int threadIDs[FORK_NUM];
     srand(time(NULL));
 	
-	// init the mutex
-	for (int i = 0; i < FORK_NUM; i++) {
+    // init the mutex
+    for (int i = 0; i < FORK_NUM; i++) {
         pthread_mutex_init(&forks[i],NULL);
     }
 
@@ -113,5 +113,6 @@ int main(){
 
 	// display all eat time for all philosopgers
     displayAllEatTime();
-	return 0;
+    
+    return 0;
 }
