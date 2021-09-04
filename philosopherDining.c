@@ -56,7 +56,7 @@ void *eat_think(void *arg) {
         printf("Philosopher %d gets the fork %d\n", index, leftFork);
         // get the sleep time for the right fork
         time = generateRandomTime();
-		printf("Philosopher %d is thinking %.3fs\n", index, time / SECOND_UNIT);
+        printf("Philosopher %d is thinking %.3fs\n", index, time / SECOND_UNIT);
         usleep(100000 * time);
 		
         // try to mutex the lock 
@@ -113,6 +113,6 @@ int main(){
 
 	// display all eat time for all philosopgers
     displayAllEatTime();
-    
+
     return 0;
 }
