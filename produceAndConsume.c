@@ -162,14 +162,14 @@ int main() {
   int producers_id[PRODUCER_NUM];
 
   launchPthread(producers, PRODUCER_NUM, producer_worker, producers_id);
-  launchPthread(cosumers, CONSUMER_NUM, consumer_worker, consumers_id);
+  launchPthread(consumers, CONSUMER_NUM, consumer_worker, consumers_id);
 
   sleep(10);
   buckets.done = 1;
 
   // release all threads
   releaseThreads(producers, PRODUCER_NUM);
-  releaseThreads(cosumers, CONSUMER_NUM);
+  releaseThreads(consumers, CONSUMER_NUM);
 
   pthread_mutex_destroy(&mutex);
   pthread_cond_destroy(&cond);
