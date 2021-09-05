@@ -65,7 +65,7 @@ void *eat_think(void *arg) {
             pthread_mutex_unlock(&forks[leftFork]); 
             printf("Philosopher %d put fork %d down\n", index, leftFork);
             continue;
-		}
+        }
         else {
             // get the right fork
             printf("Philosopher %d gets the fork %d\n", index, rightFork);
@@ -117,12 +117,12 @@ int main(){
     sleep(10);
     done = 1;
 	
-	// release all threads
+    // release all threads
     for (int i = 0; i < FORK_NUM; i++) {
         pthread_join(philosophers[i], NULL);
     }
 
-	// display all eat time for all philosopgers
+    // display all eat time for all philosopgers
     displayAllEatTime();
 
     return 0;
