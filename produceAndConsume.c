@@ -94,7 +94,7 @@ void* consumer_worker(void *arg) {
   int threadID = *(int *)arg;
   printf("consumer thread: %d start working.\n", threadID);
   while (1) {
-    // if exceed 10 seconds, the comsumer thread function would just return.
+    // if exceed 10 seconds, the consumer thread function would just return.
     if (buckets.done == 1) {
         return NULL;
     }
@@ -156,7 +156,7 @@ int main() {
   // initialize all parameters
   initParameter();
 
-  pthread_t comsumers[CONSUMER_NUM];
+  pthread_t consumers[CONSUMER_NUM];
   pthread_t producers[PRODUCER_NUM];
   int consumers_id[CONSUMER_NUM];
   int producers_id[PRODUCER_NUM];
