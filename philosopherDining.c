@@ -71,18 +71,23 @@ void *eat_think(void *arg) {
             printf("Philosopher %d gets the fork %d\n", index, rightFork);
         }
 			
-		// to make all philosopger fair for eating dinner, 
-		// a array would be used to record the dinner time, 
-		// if the current philosopger dinner time less than the average time
-		// then he can eat dinner
-        /*if (lessThanAvgTime(index) || eatTimes[index] == 0) {
+	    // to make all philosopger fair for eating dinner, 
+        // a array would be used to record the dinner time, 
+        // if the current philosopger dinner time less than the average time
+        // then he can eat dinner
+        if (lessThanAvgTime(index) || eatTimes[index] == 0) {
             time = generateRandomTime();
             usleep(100000 * time);
-            eatTimes[index] += time; 
+            eatTimes[index] += time / 10; 
             printf("Philosopher %d is eating %.3fs\n", index, time / SECOND_UNIT);
-        }*/
-		
-		
+        }
+
+        // release the left and right fork
+        pthread_mutex_unlock(&forks[leftFork]);
+        printf("Philosopher %d put fork %d down\n", index, leftFork);
+        pthread_mutex_unlock(&forks[rightFork]);
+        printf("Philosopher %d put fork %d down\n", index, rightFork);
+
 	}
 }
 
@@ -101,6 +106,12 @@ int main(){
     // init the mutex
     for (int i = 0; i < FORK_NUM; i++) {
         pthread_mutex_init(&forks[i],NULL);
+    }
+
+    // launch the pthread with specified worker function
+    for (int i = 0; i < FORK_NUM; i++) {
+        threadIDs[i] = i;
+        pthread_create(&philosophers[i], NULL, eat_think, (void *)&threadIDs[i]);
     }
 
     sleep(10);
