@@ -46,7 +46,6 @@ void displayAllProduct() {
   printf("}\n");
 }
 
-
 /*
   producer thread's work function.
   After the producer gets the mutex, check the number of products in the buffer:
@@ -89,6 +88,7 @@ void* producer_worker(void *arg) {
     }
     return NULL;
 }
+
 void* consumer_worker(void *arg) {
 
   int threadID = *(int *)arg;
@@ -106,7 +106,6 @@ void* consumer_worker(void *arg) {
       pthread_cond_wait(&cond, &mutex);
     }
 
-
     // consuming
     buckets.consume_index = buckets.consume_index % BUCKET_SIZE;
     int product = buckets.buffer[buckets.consume_index];
@@ -121,6 +120,7 @@ void* consumer_worker(void *arg) {
   }
   return NULL;
 }
+
 // initialize the buffer which used for the producer and consumer threads
 void initParameter() {
   for (int i = 0; i < BUCKET_SIZE; i++) {
